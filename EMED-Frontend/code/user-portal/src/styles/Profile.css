@@ -1,0 +1,19 @@
+/* Profile.css */
+.container {
+    padding: 20px;
+  }
+  
+  .card {
+    margin: 20px 0;
+  }
+  
+  .form-control,
+  .form-check-input,
+  .btn {
+    margin: 10px 0;
+  }
+  
+  .link-primary {
+    color: blue;
+  }
+  
