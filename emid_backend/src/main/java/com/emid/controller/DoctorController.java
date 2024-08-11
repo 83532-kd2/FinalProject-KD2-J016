@@ -10,6 +10,8 @@ import com.emid.services.DoctorService;
 
 import java.util.List;
 
+
+@CrossOrigin(origins="*")
 @RestController
 @RequestMapping("/api/doctors")
 public class DoctorController {

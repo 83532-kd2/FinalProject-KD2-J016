@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 import com.emid.entities.BaseEntity;
+import com.emid.entities.Role;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -18,6 +19,8 @@ import lombok.ToString;
 public class DoctorDto {
 	private Long id;
     // Person fields
+	private Role role;
+	
     private String firstName;
     private String lastName;
     private String email;

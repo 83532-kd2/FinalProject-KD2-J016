@@ -1,4 +1,6 @@
 package com.emid.services;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -6,9 +8,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.emid.custom_exception.ResourceNotFoundException;
 import com.emid.dao.AppointmentRepository;
 import com.emid.entities.Appointment;
-
-import java.util.List;
-import java.util.Optional;
 
 @Service
 @Transactional
@@ -47,4 +46,5 @@ public class AppointmentService {
     public List<Appointment> getAppointmentsByPatient(Long patientId) {
         return appointmentRepository.findByPatientId(patientId);
     }
+    
 }

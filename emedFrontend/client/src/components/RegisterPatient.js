@@ -41,7 +41,7 @@ const PatientRegistrationForm = () => {
     e.preventDefault();
 
     try {
-      await axios.post("http://localhost:8080/patients", formData);
+      await axios.post("http://localhost:8080/api/patients", formData);
       navigate("/login"); // Redirect after successful registration
     } catch (err) {
       setError("Registration failed. Please check the server logs.");

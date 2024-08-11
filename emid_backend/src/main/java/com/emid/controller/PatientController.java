@@ -11,6 +11,7 @@ import com.emid.services.PatientService;
 
 import java.util.List;
 
+@CrossOrigin(origins="*")
 @RestController
 @RequestMapping("/api/patients")
 public class PatientController {

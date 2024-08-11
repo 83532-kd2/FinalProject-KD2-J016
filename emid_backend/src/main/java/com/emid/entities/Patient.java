@@ -2,11 +2,8 @@ package com.emid.entities;
 
 
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
 
 import lombok.AllArgsConstructor;
@@ -22,7 +19,7 @@ import lombok.ToString;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class Patient extends Person {
+public class Patient extends User {
 	@Column(length = 200)
 	private String history;
 	@Column(length = 200)

@@ -3,6 +3,7 @@ package com.emid.dto;
 import java.time.LocalDate;
 
 import com.emid.entities.BaseEntity;
+import com.emid.entities.Role;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -16,6 +17,7 @@ import lombok.ToString;
 @ToString
 public class PatientDto  {
 	private Long id;
+	private Role role;
     // Person fields
     private String firstName;
     private String lastName;
