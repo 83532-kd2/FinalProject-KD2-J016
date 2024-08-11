@@ -1,13 +1,9 @@
 package com.emid.entities;
 
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
 
 import lombok.AllArgsConstructor;
@@ -23,7 +19,7 @@ import lombok.ToString;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class Doctor extends Person {
+public class Doctor extends User {
 	@Column(length = 50)
 	private String specialization;
 	

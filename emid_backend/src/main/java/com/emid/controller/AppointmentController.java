@@ -8,7 +8,7 @@ import com.emid.entities.Appointment;
 import com.emid.services.AppointmentService;
 
 import java.util.List;
-
+@CrossOrigin(origins="*")
 @RestController
 @RequestMapping("/api/appointments")
 public class AppointmentController {

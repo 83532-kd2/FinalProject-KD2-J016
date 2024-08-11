@@ -42,11 +42,11 @@ public class PatientService {
     }
 
     public Patient savePatient(PatientDto patientDto) {
-    	User user = new User();
-   	 user.setEmail(patientDto.getEmail());
-        user.setPassword(patientDto.getPassword());
-        user.setRole(Role.ROLE_PATIENT);
-        userDao.save(user);
+//    	User user = new User();
+//   	 user.setEmail(patientDto.getEmail());
+//        user.setPassword(patientDto.getPassword());
+//        user.setRole(Role.ROLE_PATIENT);
+//        userDao.save(user);
         Patient patient = mapper.map(patientDto, Patient.class);
         return patientRepository.save(patient);
     }

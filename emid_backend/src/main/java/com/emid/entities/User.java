@@ -1,44 +1,67 @@
 package com.emid.entities;
 
+import java.time.LocalDate;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.PrimaryKeyJoinColumn;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+
+
 @Entity
-
-@Setter
+@Inheritance(strategy = InheritanceType.JOINED)
 @Getter
+@Setter
 @ToString
-@NoArgsConstructor
-@AllArgsConstructor
-public class User {
+
+public class User extends BaseEntity {
+	@Column(name = "first_name",length = 50)
+	private String firstName;
 	
+	@Column(name = "last_name",length = 50)
+	private String lastName;
 	
+	@Column(length = 50)
+	private String email;
 	
-
-	    @Id
-	    @GeneratedValue(strategy = GenerationType.IDENTITY)
-	    private Long id;
-
-	    
-	    private String email;
-	    private String password;
-
+	@Column(length = 50)
+	private String password;
 	
-	    @Enumerated(EnumType.STRING)
-	    private Role role;
-
-
-		
-
+	@Column(length = 50)
+	private String gender;
+	
+	@Column(name = "age")
+	private int age;
+	
+	@Column(name = "birth_date")
+	private LocalDate birthDate;
+	
+	@Column(length = 20,name = "phone_no")
+	private String phoneNo;
+	
+    @Enumerated(EnumType.STRING)
+    private Role role;
+//	
+//	@ManyToOne(cascade = CascadeType.PERSIST)
+//	@JoinColumn(name = "address_id")
+//	private Address address;
+	
+	@Column(name="area",length=100)
+	private String area;
+	
+	@Column(length=20)
+	private String city;
+	@Column(length=20)
+	private String state;
+	@Column(length=20)
+	private String country;
+	@Column(length=20,name="zip_code")
+	private String zipCode; 
+	
 }

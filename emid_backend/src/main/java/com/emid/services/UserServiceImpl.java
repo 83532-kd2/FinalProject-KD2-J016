@@ -27,7 +27,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public UserResponseDto loginUser(UserLoginDto dto) {
 		User user = userDao.findByEmailAndPassword(
-				dto.getEmail(), dto.getPwd())
+				dto.getEmail(), dto.getPassword())
 				.orElseThrow(() -> 
 				new AuthenticationException("Invalid Email or Password !!!!!!"));
 		//valid login -user : persistent -> entity -> dto

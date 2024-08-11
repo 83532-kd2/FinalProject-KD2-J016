@@ -1,4 +1,7 @@
 package com.emid.services;
+import java.time.LocalTime;
+import java.util.List;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,11 +14,6 @@ import com.emid.dto.DoctorDto;
 import com.emid.entities.Doctor;
 import com.emid.entities.Role;
 import com.emid.entities.User;
-
-import java.time.LocalTime;
-import java.util.List;
-
-import javax.persistence.EnumType;
 
 @Service
 @Transactional
@@ -43,15 +41,15 @@ public class DoctorService {
 
     public Doctor saveDoctor(DoctorDto doctorDto) {
     	
-    	User user = new User();
-    	 user.setEmail(doctorDto.getEmail());
-         user.setPassword(doctorDto.getPassword());
-         
-         user.setRole(Role.ROLE_DOCTOR);
-         userDao.save(user);
+//    	User user = new User();
+//    	 user.setEmail(doctorDto.getEmail());
+//         user.setPassword(doctorDto.getPassword());
+//         
+//         user.setRole(Role.ROLE_DOCTOR);
+//         userDao.save(user);
          Doctor doctor = mapper.map(doctorDto, Doctor.class);
-         System.out.println(doctor.getConsultationFees());
-         System.out.println(doctorDto.getConsultationFees());
+//         System.out.println(doctor.getConsultationFees());
+//         System.out.println(doctorDto.getConsultationFees());
          doctor.setStartTime(LocalTime.parse(doctorDto.getStartTime()));
          doctor.setEndTime(LocalTime.parse(doctorDto.getEndTime()));
          

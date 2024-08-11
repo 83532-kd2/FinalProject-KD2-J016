@@ -16,12 +16,13 @@ function LoginPage() {
     try {
       const response = await axios.post("http://localhost:8080/users/signin", {
         email: email,
-        pwd: password,
+        password: password,
       });
 
       // Store email and role in session storage
       sessionStorage.setItem("userEmail", response.data.email);
       sessionStorage.setItem("userRole", response.data.role);
+      sessionStorage.setItem("userRole", response.data.id);
 
       // Redirect to home page or another page based on role
       if (response.data.role === "ROLE_DOCTOR") {
