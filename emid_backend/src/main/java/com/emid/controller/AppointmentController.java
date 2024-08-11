@@ -4,6 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import com.emid.dao.AppointmentDto;
 import com.emid.entities.Appointment;
 import com.emid.services.AppointmentService;
 
@@ -17,8 +18,8 @@ public class AppointmentController {
     private AppointmentService appointmentService;
 
     @PostMapping("/book")
-    public ResponseEntity<Appointment> bookAppointment(@RequestBody Appointment appointment) {
-        Appointment bookedAppointment = appointmentService.bookAppointment(appointment);
+    public ResponseEntity<Appointment> bookAppointment(@RequestBody AppointmentDto appointmentDto) {
+        Appointment bookedAppointment = appointmentService.bookAppointment(appointmentDto);
         return new ResponseEntity<>(bookedAppointment, HttpStatus.CREATED);
     }
 

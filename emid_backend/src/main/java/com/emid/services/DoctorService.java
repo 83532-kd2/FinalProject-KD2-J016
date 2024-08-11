@@ -48,10 +48,11 @@ public class DoctorService {
 //         user.setRole(Role.ROLE_DOCTOR);
 //         userDao.save(user);
          Doctor doctor = mapper.map(doctorDto, Doctor.class);
+         doctor.setRole(Role.ROLE_DOCTOR);
 //         System.out.println(doctor.getConsultationFees());
 //         System.out.println(doctorDto.getConsultationFees());
-         doctor.setStartTime(LocalTime.parse(doctorDto.getStartTime()));
-         doctor.setEndTime(LocalTime.parse(doctorDto.getEndTime()));
+//         doctor.setStartTime(LocalTime.parse(doctorDto.getStartTime()));
+//         doctor.setEndTime(LocalTime.parse(doctorDto.getEndTime()));
          
     	
         return doctorRepository.save(doctor);

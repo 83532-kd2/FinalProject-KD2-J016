@@ -48,6 +48,7 @@ public class PatientService {
 //        user.setRole(Role.ROLE_PATIENT);
 //        userDao.save(user);
         Patient patient = mapper.map(patientDto, Patient.class);
+        patient.setRole(Role.ROLE_PATIENT);
         return patientRepository.save(patient);
     }
 

@@ -3,6 +3,7 @@ package com.emid.entities;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -18,7 +19,7 @@ import lombok.ToString;
 @Entity
 @Getter
 @Setter
-@ToString
+
 @NoArgsConstructor
 @AllArgsConstructor
 public class Appointment extends BaseEntity {
@@ -26,17 +27,17 @@ public class Appointment extends BaseEntity {
 	
 	private LocalDate date;
 	
-	private LocalDateTime time;
+	private LocalTime time;
 	@Column(name = "appointment_type")
 	private String appointmentType;
 	
 	private boolean status;
 	@ManyToOne
 	@JoinColumn(name="doctor_id",nullable = false)
-	private Doctor doctor;
+	private Doctor selectedDoctor;
 	@ManyToOne
 	@JoinColumn(name = "patient_id",nullable = false)
-	private Patient patient;
+	private Patient selectedPatient;
 	
 	
 	
