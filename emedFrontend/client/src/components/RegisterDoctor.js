@@ -51,7 +51,7 @@ const DoctorRegistrationForm = () => {
     try {
       // Exclude confirmPassword from request data
       const { confirmPassword, ...dataToSubmit } = formData;
-      await axios.post("http://localhost:8080/doctors", dataToSubmit);
+      await axios.post("http://localhost:8080/api/doctors", dataToSubmit);
       navigate("/login"); // Redirect after successful registration
     } catch (err) {
       setError("Registration failed. Please check the server logs.");
