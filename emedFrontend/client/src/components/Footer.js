@@ -12,23 +12,8 @@ const Footer = () => {
           <h4 className="text-xl font-semibold text-blue-400 mb-4">About</h4>
           <ul>
             <li className="mb-2">
-              <a href="/aboutus" className="hover:text-blue-300">
+              <a href="/about-us" className="hover:text-blue-300">
                 About Us
-              </a>
-            </li>
-            <li className="mb-2">
-              <a href="#annual-checkup" className="hover:text-blue-300">
-                Annual Checkup
-              </a>
-            </li>
-            <li className="mb-2">
-              <a href="#blog" className="hover:text-blue-300">
-                Blog
-              </a>
-            </li>
-            <li className="mb-2">
-              <a href="#careers" className="hover:text-blue-300">
-                Careers
               </a>
             </li>
           </ul>
@@ -38,22 +23,22 @@ const Footer = () => {
           <h4 className="text-xl font-semibold text-blue-400 mb-4">Services</h4>
           <ul>
             <li className="mb-2">
-              <a href="#consultation" className="hover:text-blue-300">
+              <a href="/consultation" className="hover:text-blue-300">
                 Consultation
               </a>
             </li>
             <li className="mb-2">
-              <a href="#appointment" className="hover:text-blue-300">
+              <a href="/doctors" className="hover:text-blue-300">
                 Book Appointment
               </a>
             </li>
             <li className="mb-2">
-              <a href="#telehealth" className="hover:text-blue-300">
+              <a href="/telehealth" className="hover:text-blue-300">
                 Telehealth
               </a>
             </li>
             <li className="mb-2">
-              <a href="#diagnosis" className="hover:text-blue-300">
+              <a href="/diagnosis" className="hover:text-blue-300">
                 Diagnosis
               </a>
             </li>
@@ -64,22 +49,22 @@ const Footer = () => {
           <h4 className="text-xl font-semibold text-blue-400 mb-4">Support</h4>
           <ul>
             <li className="mb-2">
-              <a href="/contactus" className="hover:text-blue-300">
+              <a href="/contact-us" className="hover:text-blue-300">
                 Contact Us
               </a>
             </li>
             <li className="mb-2">
-              <a href="#faq" className="hover:text-blue-300">
+              <a href="/faq" className="hover:text-blue-300">
                 FAQs
               </a>
             </li>
             <li className="mb-2">
-              <a href="#privacy-policy" className="hover:text-blue-300">
+              <a href="/privacy-policy" className="hover:text-blue-300">
                 Privacy Policy
               </a>
             </li>
             <li className="mb-2">
-              <a href="#terms-conditions" className="hover:text-blue-300">
+              <a href="/terms-conditions" className="hover:text-blue-300">
                 Terms & Conditions
               </a>
             </li>
@@ -91,14 +76,14 @@ const Footer = () => {
         <p className="text-gray-400">&copy; 2024 EMED. All rights reserved.</p>
         <p>
           <a
-            href="#privacy-policy"
+            href="/privacy-policy"
             className="text-blue-400 hover:text-blue-300 mx-2"
           >
             Privacy Policy
           </a>{" "}
           |
           <a
-            href="#terms-conditions"
+            href="/terms-conditions"
             className="text-blue-400 hover:text-blue-300 mx-2"
           >
             Terms & Conditions

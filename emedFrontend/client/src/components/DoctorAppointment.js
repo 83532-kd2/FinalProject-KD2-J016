@@ -3,47 +3,36 @@ import axios from "axios";
 
 const DoctorAppointments = () => {
   const [doctor, setDoctor] = useState(null);
-  const [appointments, setAppointments] = useState([]); // Initialize with an empty array
+  const [appointments, setAppointments] = useState([]);
   const [error, setError] = useState("");
+
   useEffect(() => {
     const doctorId = sessionStorage.getItem("userId");
 
     if (doctorId) {
-      // Fetch doctor data
+      // Fetch doctor and appointments data
       axios
         .get(`http://localhost:8080/api/doctors/${doctorId}`)
         .then((response) => {
           const doctorData = response.data.doctor;
           const appointmentsData = response.data.appointmentList;
 
-          // console.log("Doctor data:", doctorData);
-          // console.log("Doctor First Name:", doctorData.firstName);
-          // console.log("Doctor Last Name:", doctorData.lastName);
+          // Log the fetched data for debugging
+          console.log("Doctor data:", doctorData);
+          console.log("Appointments:", appointmentsData);
 
-          setDoctor(doctorData); // Set doctor data
-          setAppointments(appointmentsData || []); // Set appointments, fallback to empty array if undefined
+          // Set the doctor data
+          setDoctor(doctorData);
+
+          // Filter out canceled appointments
+          const filteredAppointments = appointmentsData.filter(
+            (appointment) => appointment.status !== "CANCELED"
+          );
+          setAppointments(filteredAppointments || []);
         })
         .catch((error) => {
           console.error("Error fetching doctor data and appointments:", error);
           setError("Error fetching doctor data and appointments");
-        });
-
-      // Fetch appointments data
-      axios
-        .get(
-          `http://localhost:8080/api/appointments/doctor/${doctorId}/appointments`
-        )
-        .then((response) => {
-          // console.log("Appointments:", response.data); // Log the fetched data
-          // Filter out canceled appointments
-          const filteredAppointments = response.data.filter(
-            (appointment) => appointment.status !== "CANCELED"
-          );
-          setAppointments(filteredAppointments || []); // Fallback to empty array if undefined
-        })
-        .catch((error) => {
-          console.error("Error fetching appointments:", error);
-          setError("Error fetching appointments");
         });
     } else {
       setError("No doctor ID found in session storage");
