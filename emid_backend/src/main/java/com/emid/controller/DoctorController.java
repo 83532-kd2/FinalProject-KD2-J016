@@ -4,6 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import com.emid.dto.DoctorAppointmentDto;
 import com.emid.dto.DoctorDto;
 import com.emid.entities.Doctor;
 import com.emid.services.DoctorService;
@@ -26,9 +27,10 @@ public class DoctorController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Doctor> getDoctorById(@PathVariable Long id) {
-        Doctor doctor = doctorService.findDoctorById(id);
-        return new ResponseEntity<>(doctor, HttpStatus.OK);
+    public ResponseEntity<DoctorAppointmentDto> getDoctorById(@PathVariable Long id) {
+    	
+        DoctorAppointmentDto dto = doctorService.findDoctorById(id);
+        return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 
     @GetMapping("/email")

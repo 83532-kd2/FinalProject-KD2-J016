@@ -45,34 +45,46 @@ const DoctorSlots = () => {
 
     // Confirm the appointment
     const handleConfirmAppointment = async () => {
-      debugger;
-      if (!selectedSlot) {
-          setError('Please select a time slot.');
-          return;
-      }
-  
-      console.log(`Booking appointment for slot: ${selectedSlot}`); // Log before booking
-  
-      try {
-          const response = await axios.post('http://localhost:8080/api/appointments/book', {
-              doctorId: id,
-              patientId: 1, // Replace with actual patient ID
-              appointmentDateTime: selectedSlot, // Correctly formatted date-time
-              appointmentType: 'CONSULTATION' // Adjust this as per your AppointmentType enum
-          });
-  
-          console.log('Appointment booked successfully:', response.data); // Log success
-          alert('Slot booked successfully!');
-          navigate('/next-page'); // Redirect to the next page after booking
-      } catch (error) {
-          setError('Error booking slot');
-          console.error('Error booking slot:', error.response?.data || error.message);
-      }
-  };
-  
+        if (!selectedSlot) {
+            setError('Please select a time slot.');
+            return;
+        }
+
+        // Retrieve patientId from session storage
+        const patientId = sessionStorage.getItem('userId');
+        console.log('Retrieved patientId from session storage:', patientId); // Log the patientId
+
+        if (!patientId) {
+            setError('Patient ID is not available in session storage. Please log in or refresh the page.');
+            return;
+        }
+
+        console.log(`Booking appointment for slot: ${selectedSlot} with patientId: ${patientId}`); // Log before booking
+
+        try {
+            const response = await axios.post('http://localhost:8080/api/appointments/book', {
+                doctorId: id,
+                patientId: patientId, // Use patientId from session storage
+                appointmentDateTime: selectedSlot, // Correctly formatted date-time
+                appointmentType: 'CONSULTATION' // Adjust this as per your AppointmentType enum
+            });
+
+            console.log('Appointment booked successfully:', response.data); // Log success
+            alert('Slot booked successfully!');
+            navigate('/patient/confirmAppointment'); // Redirect to the next page after booking
+        } catch (error) {
+            setError('Error booking slot');
+            console.error('Error booking slot:', error.response?.data || error.message);
+        }
+    };
+
+    // Function to extract time from datetime
+    const extractTime = (datetime) => {
+        return datetime.split('T')[1]; // Returns only the time portion
+    };
 
     return (
-        <div className="bg-white flex flex-col items-center justify-center">
+        <div className="bg-lightcyan flex flex-col items-center justify-center">
             {!showSlots ? (
                 <form onSubmit={handleDateSubmit} className="bg-white p-6 rounded-lg shadow-md">
                     <h2 className="text-center text-2xl font-semibold mb-4">Select Date</h2>
@@ -87,12 +99,14 @@ const DoctorSlots = () => {
                             required
                         />
                     </div>
-                    <button
-                        type="submit"
-                        className="mt-4 inline-block bg-orange-400 text-white py-2 px-4 rounded hover:bg-red-600"
-                    >
-                        Show Slots
-                    </button>
+                    <div className='flex justify-center item-center'>
+                        <button
+                            type="submit"
+                            className="mt-4 inline-block bg-orange-400 text-white py-2 px-4 rounded hover:bg-red-600"
+                        >
+                            Show Slots
+                        </button>
+                    </div>
                 </form>
             ) : (
                 <div>
@@ -110,13 +124,13 @@ const DoctorSlots = () => {
                                         selectedSlot === slot ? 'bg-green-500' : 'bg-blue-400'
                                     }`}
                                 >
-                                    {slot ? slot : 'Unavailable'}
+                                    {extractTime(slot) ? extractTime(slot) : 'Unavailable'}
                                 </button>
                             ))}
                         </div>
                     )}
                     {selectedSlot && (
-                        <div className="mt-6">
+                        <div className="mt-6 flex justify-center items-center">
                             <button
                                 onClick={handleConfirmAppointment}
                                 className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
