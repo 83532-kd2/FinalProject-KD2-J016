@@ -8,6 +8,11 @@ import RegisterDoctor from "./components/RegisterDoctor";
 import DoctorDashboard from "./components/DoctorDashboard";
 import PatientProfile from "./components/PatientProfile";
 import DoctorProfile from "./components/DoctorProfile";
+import DoctorProfiles from "./screens/Patient/DoctorProfiles";
+import AvailableSlots from "./screens/Patient/AvailableSlots";
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer } from "react-toastify";
+import DoctorSlots from "./components/DoctorSlots";
 
 function App() {
   return (
@@ -21,8 +26,15 @@ function App() {
         <Route path="/patient-dashboard" element={<PatientDashboard />} />
         <Route path="/patient-profile" element={<PatientProfile />} />
         <Route path="/doctor-profile" element={<DoctorProfile />} />
-
+        <Route path="/" element={<DoctorProfiles />} />
+        <Route path="/doctor/:id/slots" element={<AvailableSlots />} />
+        <Route path="/doctor/:doctorId/slots" component={DoctorSlots} />
+        {/* <Route path="/" element={<DateSelection />} /> Optional */}
+        <Route path="/doctors" element={<DoctorProfiles />} />
+        <Route path="/doctor/:doctorId/slots" element={<DoctorSlots />} />
+        
       </Routes>
+      <ToastContainer />
     </Router>
   );
 }
