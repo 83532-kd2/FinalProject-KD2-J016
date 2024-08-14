@@ -2,7 +2,8 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 const Sidebar = () => {
-  const role = sessionStorage.getItem("userRole"); // Retrieve the role from session storage
+  // Retrieve the role from session storage
+  const role = sessionStorage.getItem("userRole");
 
   // Define links for each role
   const links = {
@@ -10,7 +11,6 @@ const Sidebar = () => {
       { name: "Dashboard", path: "/doctor-dashboard" },
       { name: "Appointments", path: "/doctor-appointments" },
       { name: "Profile", path: "/doctor-profile" },
-      
     ],
     ROLE_PATIENT: [
       { name: "Dashboard", path: "/patient-dashboard" },
@@ -19,11 +19,16 @@ const Sidebar = () => {
       { name: "Profile", path: "/patient-profile" },
     ],
     ROLE_ADMIN: [
-      { name: "User Management", path: "/admin/users" },
-      { name: "Doctor Management", path: "/admin/doctors" },
-      { name: "Appointments Overview", path: "/admin/appointments" },
+      { name: "Dashboard", path: "/admin-dashboard" },
+      { name: "Manage Users", path: "/admin-users" },
+      { name: "Manage Appointments", path: "/admin-appointments" },
     ],
   };
+
+  // Render the Sidebar only if the role is present
+  if (!role) {
+    return null; // Do not render anything if the user is not logged in
+  }
 
   return (
     <div className="w-64 h-full bg-gray-800 text-white fixed top-0 left-0 shadow-lg">
@@ -31,16 +36,15 @@ const Sidebar = () => {
         E-MED
       </div>
       <nav className="mt-8">
-        {role &&
-          links[role]?.map((link, index) => (
-            <Link
-              key={index}
-              to={link.path}
-              className="block py-2.5 px-4 rounded hover:bg-gray-700 transition duration-300"
-            >
-              {link.name}
-            </Link>
-          ))}
+        {links[role]?.map((link, index) => (
+          <Link
+            key={index}
+            to={link.path}
+            className="block py-2.5 px-4 rounded hover:bg-gray-700 transition duration-300"
+          >
+            {link.name}
+          </Link>
+        ))}
       </nav>
     </div>
   );
