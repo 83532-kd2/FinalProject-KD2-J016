@@ -1,23 +1,27 @@
 package com.emid.services;
-import java.time.LocalDateTime;
-import java.util.List;
 
-import org.modelmapper.ModelMapper;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.emid.custom_exception.DoctorNotFoundException;
 import com.emid.custom_exception.PatientNotFoundException;
-import com.emid.custom_exception.ResourceNotFoundException;
-import com.emid.dao.AppointmentDto;
 import com.emid.dao.AppointmentRepository;
 import com.emid.dao.DoctorRepository;
 import com.emid.dao.PatientRepository;
+import com.emid.dto.AppointmentSlotDTO;
 import com.emid.entities.Appointment;
-import com.emid.entities.BooleanStatus;
+import com.emid.entities.AppointmentStatus;
 import com.emid.entities.Doctor;
 import com.emid.entities.Patient;
+import com.emid.entities.TimeSlotGenerator;
 
 @Service
 @Transactional
@@ -27,88 +31,105 @@ public class AppointmentService {
     private AppointmentRepository appointmentRepository;
     @Autowired
     private DoctorRepository doctorRepository;
-    
+
     @Autowired
     private PatientRepository patientRepository;
-    @Autowired
-    private ModelMapper mapper;
 
-    
-    public Appointment bookAppointment(AppointmentDto appointmentDto) {
+    public Appointment bookAppointment(AppointmentSlotDTO appointmentDTO) {
+        // Fetch doctor and patient from the database
+        Doctor doctor = doctorRepository.findById(appointmentDTO.getDoctorId())
+                .orElseThrow(
+                        () -> new DoctorNotFoundException("Doctor not found with id " + appointmentDTO.getDoctorId()));
+        Patient patient = patientRepository.findById(appointmentDTO.getPatientId())
+                .orElseThrow(() -> new PatientNotFoundException(
+                        "Patient not found with id " + appointmentDTO.getPatientId()));
 
-////		Customer customer=customerdao.findById(dto.getUserId())
-////				.orElseThrow(()-> new RuntimeException("Invalid Customer Id"));
-////		
-////		Bus busId= busDao.findById(dto.getBusId())
-////				.orElseThrow(()-> new RuntimeException("Invalid Bus Id"));
-//
-////    	List <BooleanStatus >list=busId.getSeatStatus();
-////		if(list.get(dto.getSeatNumber())==BooleanStatus.FALSE) {
-////			return	"Seat Is Already Booked";
-////		}
-////		list.set(dto.getSeatNumber(), BooleanStatus.FALSE);
-////		busId.setSeatStatus(list);
-////		Reservation reservation=mapper.map(dto, Reservation.class);
-////		reservation.setCustomer(customer);
-////		reservation.setSelectedBus(busId);
-////	    reservation.setReservationDate(LocalDate.now());
-////		Reservation persistReservation=reservationdao.save(reservation);
-////		return "Reservation Confirmed";
-    	Doctor doctor = doctorRepository.findById(appointmentDto.getDoctorId()).orElseThrow(()-> new DoctorNotFoundException("doctor not found with id "+ appointmentDto.getDoctorId()));
-    	Patient patient = patientRepository.findById(appointmentDto.getPatientId()).orElseThrow(()-> new PatientNotFoundException("patient not found exception"));
-    	LocalDateTime appointmentTime = appointmentDto.getTime();
-    	// Assuming the appointmentDto.getSlotIndex() gives the index of the slot in the list
-        int slotIndex = appointmentDto.getSlotIndex(); 
+        // Convert the String to LocalDateTime
+        DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 
-        // Check if the slot is available
-        if (doctor.getSlotStatus().get(slotIndex) == BooleanStatus.FALSE) {
-            return null;
+        LocalDateTime appointmentDateTime = LocalDateTime.parse(appointmentDTO.getAppointmentDateTime(), formatter);
+
+        // Check if the doctor is available at the given date and time
+        boolean isDoctorAvailable = appointmentRepository
+                .findBySelectedDoctorAndAppointmentDateTime(doctor, appointmentDateTime).isEmpty();
+
+        if (!isDoctorAvailable) {
+            throw new RuntimeException("Doctor is not available at this time slot.");
         }
 
-        // Mark the slot as booked
-        doctor.getSlotStatus().set(slotIndex, BooleanStatus.FALSE);
-        doctorRepository.save(doctor);
-
-        // Create and save the appointment
+        // Create a new appointment
         Appointment appointment = new Appointment();
+        appointment.setAppointmentDateTime(appointmentDateTime);
+        appointment.setAppointmentType(appointmentDTO.getAppointmentType());
+        appointment.setStatus(AppointmentStatus.SCHEDULED);
         appointment.setSelectedDoctor(doctor);
         appointment.setSelectedPatient(patient);
-        appointment.setDate(appointmentDto.getTime().toLocalDate());
-        appointment.setTime(appointmentDto.getTime().toLocalTime());
-        appointment.setStatus(true);
 
-        appointmentRepository.save(appointment);
-
-        return appointment;
-    }
-
-    public void cancelAppointment(Long appointmentId) {
-        if (appointmentRepository.existsById(appointmentId)) {
-            appointmentRepository.deleteById(appointmentId);
-        } else {
-            throw new ResourceNotFoundException("Appointment not found with id: " + appointmentId);
-        }
-    }
-
-    public Appointment updateAppointment(Long appointmentId, Appointment appointmentDetails) {
-        Appointment appointment = appointmentRepository.findById(appointmentId)
-            .orElseThrow(() -> new ResourceNotFoundException("Appointment not found with id: " + appointmentId));
-
-        appointment.setDate(appointmentDetails.getDate());
-        appointment.setTime(appointmentDetails.getTime());
-        appointment.setAppointmentType(appointmentDetails.getAppointmentType());
-        appointment.setStatus(appointmentDetails.isStatus());
+        // Save the appointment to the database
         return appointmentRepository.save(appointment);
     }
 
-    public List<Appointment> getAppointmentsByDoctor(Long doctorId) {
-    	Doctor doctor = doctorRepository.findById(doctorId).orElseThrow(() -> new DoctorNotFoundException("Doctor not found with id " + doctorId));
+    public List<LocalDateTime> getAvailableTimeSlots(Doctor doctor, LocalDate date, LocalTime startTime,
+            LocalTime endTime) {
+        // Generate all possible 30-minute time slots
+        List<LocalDateTime> allSlots = TimeSlotGenerator.generateTimeSlots(date, startTime, endTime);
+
+        // Find booked appointments
+        List<Appointment> bookedAppointments = appointmentRepository
+                .findBySelectedDoctorAndAppointmentDateTimeBetween(doctor, LocalDateTime.of(date, startTime),
+                        LocalDateTime.of(date, endTime));
+
+        // Remove booked slots
+        List<LocalDateTime> bookedSlots = bookedAppointments.stream()
+                .map(Appointment::getAppointmentDateTime)
+                .collect(Collectors.toList());
+
+        // Filter out booked slots
+        return allSlots.stream()
+                .filter(slot -> !bookedSlots.contains(slot))
+                .collect(Collectors.toList());
+    }
+
+    public List<Appointment> getAppointmentsForDoctor(Long doctorId, LocalDateTime startTime, LocalDateTime endTime) {
+        Doctor doctor = doctorRepository.findById(doctorId)
+                .orElseThrow(() -> new DoctorNotFoundException("Doctor not found with id " + doctorId));
+
+        return appointmentRepository.findBySelectedDoctorAndAppointmentDateTimeBetween(doctor, startTime, endTime);
+    }
+
+
+    public List<Appointment> getAppointmentsByDoctorId(Long doctorId) {
+        // Ensure the doctor exists
+        Doctor doctor = doctorRepository.findById(doctorId)
+                .orElseThrow(() -> new DoctorNotFoundException("Doctor not found with id " + doctorId));
+
+        // Fetch and return appointments
         return appointmentRepository.findBySelectedDoctor(doctor);
     }
 
-    public List<Appointment> getAppointmentsByPatient(Long patientId) {
-    	Patient patient = patientRepository.findById(patientId).orElseThrow(() -> new PatientNotFoundException("Patient not found with id " + patientId));
-        return appointmentRepository.findBySelectedPatient(patient);
+    public boolean isDoctorAvailable(Doctor doctor, LocalDateTime start, LocalDateTime end) {
+        List<Appointment> appointments = getAppointmentsForDoctor(doctor, start, end);
+        return appointments.isEmpty();
     }
-    
+
+    public List<Appointment> getAppointmentsForDoctor(Doctor doctor, LocalDateTime start, LocalDateTime end) {
+        return appointmentRepository.findBySelectedDoctorAndAppointmentDateTimeBetween(doctor, start, end);
+    }
+
+    public void cancelAppointment(Long appointmentId) throws Exception {
+        Appointment appointment = appointmentRepository.findById(appointmentId)
+                .orElseThrow(() -> new Exception("Appointment not found"));
+
+        // Option 1: Delete the appointment
+        // appointmentRepository.delete(appointment);
+
+        // Option 2: Update the status to "canceled"
+        appointment.setStatus(AppointmentStatus.CANCELED); // Ensure you have a status field
+        appointmentRepository.save(appointment);
+    }
+
+    public List<Appointment> getAppointmentsByPatientId(Long patientId) {
+        return appointmentRepository.findBySelectedPatientId(patientId);
+    }
+
 }

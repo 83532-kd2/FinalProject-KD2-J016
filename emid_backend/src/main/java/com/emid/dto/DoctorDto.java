@@ -40,8 +40,8 @@ public class DoctorDto {
     // Doctor fields
     private int consultationFees;
     private String description;
-//    private String endTime;
+    private String endTime;
     private String qualification;
     private String specialization;
-//    private String startTime;
+    private String startTime;
 }
