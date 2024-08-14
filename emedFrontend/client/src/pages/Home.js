@@ -6,6 +6,7 @@ import ChatBot from "../components/ChatBot";
 import AboutSection from "../components/AboutSection";
 import EmedServices from "../components/EmedServices";
 import OurServices from "../components/OurServices";
+import ConsultationInfo from "../components/ConsultationInfo";
 const Home = () => {
   return (
     <main className="bg-gray-100">
@@ -33,12 +34,6 @@ const Home = () => {
           </Link>
         </div>
       </section>
-
-      {/* Statistics Section */}
-      <HomeCircles />
-
-      <EmedServices />
-      {/* CTA Section */}
       <section className="py-16 bg-white text-center">
         <h2 className="text-3xl font-bold text-gray-800">
           Book an Appointment Now
@@ -55,7 +50,14 @@ const Home = () => {
         </Link>
       </section>
 
+      {/* Statistics Section */}
+      <HomeCircles />
+
+      <EmedServices />
+      {/* CTA Section */}
+
       <AboutSection />
+      <ConsultationInfo />
       <OurServices />
 
       {/* ChatBot */}
