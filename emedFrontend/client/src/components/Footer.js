@@ -2,10 +2,9 @@ import React from "react";
 
 const Footer = () => {
   return (
-    <footer className="bg-gray-800 text-white py-8">
+    <footer className="bg-gray-800 text-white py-8 px-6">
       <div className="container mx-auto flex flex-wrap justify-between items-start">
         <div className="w-full sm:w-auto flex items-center mb-6 sm:mb-0">
-          <img src="/path/to/logo.png" alt="Logo" className="w-12 h-12 mr-4" />
           <h3 className="text-2xl font-bold text-blue-400">EMED</h3>
         </div>
 

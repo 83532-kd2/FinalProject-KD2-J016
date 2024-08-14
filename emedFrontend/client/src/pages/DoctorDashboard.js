@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 
-
 const DoctorDashboard = () => {
   const [doctor, setDoctor] = useState(null);
   const [appointments, setAppointments] = useState([]); // State for appointments
   const [error, setError] = useState("");
-
 
   useEffect(() => {
     const doctorId = sessionStorage.getItem("userId");
@@ -16,15 +14,21 @@ const DoctorDashboard = () => {
       axios
         .get(`http://localhost:8080/api/doctors/${doctorId}`)
         .then((response) => {
-          const doctorData = response.data.doctor;
-          const appointmentsData = response.data.appointmentList;
+          // Access the doctor and appointment list from the response
+          const doctorData = response.data.doctor; // Extract doctor object
+          const appointmentsData = response.data.appointmentList; // Extract appointments list
 
           console.log("Doctor data:", doctorData);
           console.log("Doctor First Name:", doctorData.firstName);
           console.log("Doctor Last Name:", doctorData.lastName);
 
           setDoctor(doctorData); // Set the doctor data
-          setAppointments(appointmentsData); // Set the appointments data
+          
+          // Filter out canceled appointments
+          const filteredAppointments = appointmentsData.filter(
+            (appointment) => appointment.status !== "CANCELED"
+          );
+          setAppointments(filteredAppointments); // Set the filtered appointments data
         })
         .catch((error) => {
           console.error("Error fetching doctor data:", error);
@@ -47,25 +51,16 @@ const DoctorDashboard = () => {
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4">
               <div className="bg-blue-50 p-4 rounded-lg shadow-sm">
-                <h3 className="text-lg font-medium mb-2">
-                  Upcoming Appointments
-                </h3>
+                <h3 className="text-lg font-medium mb-2">Upcoming Appointments</h3>
 
                 {/* Render the upcoming appointments */}
                 {appointments.length > 0 ? (
                   <ul>
                     {appointments.map((appointment) => (
                       <li key={appointment.id} className="mb-2">
-                        {appointment.selectedPatient.firstName}{" "}
-                        {appointment.selectedPatient.lastName} -{" "}
-                        {new Date(
-                          appointment.appointmentDateTime
-                        ).toLocaleDateString()}{" "}
-                        at{" "}
-                        {new Date(
-                          appointment.appointmentDateTime
-                        ).toLocaleTimeString()}
-                        , {appointment.appointmentType}
+                        {appointment.selectedPatient.firstName} {appointment.selectedPatient.lastName} -{" "}
+                        {new Date(appointment.appointmentDateTime).toLocaleDateString()} at{" "}
+                        {new Date(appointment.appointmentDateTime).toLocaleTimeString()}, {appointment.appointmentType}
                       </li>
                     ))}
                   </ul>
@@ -83,8 +78,7 @@ const DoctorDashboard = () => {
                   <strong>Phone:</strong> {doctor.phoneNo || "N/A"}
                 </p>
                 <p>
-                  <strong>Specialization:</strong>{" "}
-                  {doctor.specialization || "N/A"}
+                  <strong>Specialization:</strong> {doctor.specialization || "N/A"}
                 </p>
                 <p>
                   <strong>Location:</strong> {doctor.city || "N/A"}
